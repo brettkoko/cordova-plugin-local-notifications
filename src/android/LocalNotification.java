@@ -522,9 +522,11 @@ public class LocalNotification extends CordovaPlugin {
         deviceready = true;
 
         for (String js : eventQueue) {
-           // sendJavascript(js); // bb crosswalk hack
-             LocalNotification.webView.sendJavascript(js);
+            sendJavascript(js); 
         }
+        
+        
+        
 
         eventQueue.clear();
     }
@@ -570,15 +572,21 @@ public class LocalNotification extends CordovaPlugin {
      *       JS code snippet as string
      */
     private static synchronized void sendJavascript(final String js) {
-         LocalNotification.webView.sendJavascript(js); // bb hack crosswalk
 
-/*        if (!deviceready) {
+        if (!deviceready) {
             eventQueue.add(js);
             return;
         }
+        
+        
         Runnable jsLoader = new Runnable() {
             public void run() {
-                webView.loadUrl("javascript:" + js);
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                  webView.sendJavascript(js);
+                } else {
+                  webView.loadUrl("javascript:" + js);
+                } // bb hack cross walk
+               // webView.loadUrl("javascript:" + js);
             }
         };
         try {
@@ -588,7 +596,7 @@ public class LocalNotification extends CordovaPlugin {
 
             ((Activity)(webView.getContext())).runOnUiThread(jsLoader);
         }
-        */
+       
     }
 
     /**

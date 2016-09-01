@@ -522,11 +522,14 @@ public class LocalNotification extends CordovaPlugin {
         deviceready = true;
 
         for (String js : eventQueue) {
-            sendJavascript(js);
+           // sendJavascript(js); // bb crosswalk hack
+             LocalNotification.webView.sendJavascript(js);
         }
 
         eventQueue.clear();
     }
+    
+ 
 
     /**
      * Fire given event on JS side. Does inform all event listeners.
@@ -567,8 +570,9 @@ public class LocalNotification extends CordovaPlugin {
      *       JS code snippet as string
      */
     private static synchronized void sendJavascript(final String js) {
+         LocalNotification.webView.sendJavascript(js); // bb hack crosswalk
 
-        if (!deviceready) {
+/*        if (!deviceready) {
             eventQueue.add(js);
             return;
         }
@@ -584,6 +588,7 @@ public class LocalNotification extends CordovaPlugin {
 
             ((Activity)(webView.getContext())).runOnUiThread(jsLoader);
         }
+        */
     }
 
     /**
